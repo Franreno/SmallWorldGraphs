@@ -1,7 +1,8 @@
 from random import random, randint, shuffle
 from node import Node
 from edge import Edge
-
+from typing import List, Tuple
+from queue import PriorityQueue
 
 class SmallWorld:
     """Small world graph implementation"""
@@ -15,10 +16,10 @@ class SmallWorld:
     reconnectProbability: float
     """The reconnect probability `p`"""
 
-    nodeList: list[Node]
+    nodeList: List[Node]
     """ List of nodes from the graph """
 
-    adjacencyList: list[list[Edge]]
+    adjacencyList: List[List[Edge]]
     """ 
     List of adjacency of the graph 
     `adjacencyList[0] = [(0,1), (0,2) ...]`
@@ -38,7 +39,7 @@ class SmallWorld:
         print("Reconnecting edges")
         self.reconnectEdges()
 
-    def generateVertices(self) -> list[Node]:
+    def generateVertices(self) -> List[Node]:
         """Generates all vertices using `randint` for the coordinates
 
         Returns:
@@ -53,7 +54,7 @@ class SmallWorld:
             for idNum in range(0, self.numberOfVertices)
         ]
 
-    def generateEdges(self) -> list[list[Edge]]:
+    def generateEdges(self) -> List[List[Edge]]:
         """Creates the adjacency list for the graph
 
         Returns:
@@ -79,6 +80,62 @@ class SmallWorld:
             ]
 
         return auxAdjacencyList
+
+    def bestFirstSearch(self, startNodeIndex: int, targetNodeIndex: int) -> Tuple[List[int], float]:
+        visited = [False] * self.numberOfVertices
+        path = []
+        distance = self._bestFirstSearch(startNodeIndex, targetNodeIndex, visited, path)
+
+        return path, distance
+
+    def _bestFirstSearch(
+        self,
+        startNodeIndex: int,
+        targetNodeIndex: int,
+        visited: List[bool],
+        path: List[int],
+    ) -> float:
+        priorityQueue = PriorityQueue()
+        priorityQueue.put((0, startNodeIndex))  # (heuristic value, node index)
+
+        while not priorityQueue.empty():
+            _, currentNodeIndex = priorityQueue.get()
+
+            if visited[currentNodeIndex]:
+                continue
+
+            visited[currentNodeIndex] = True
+            path.append(currentNodeIndex)
+
+            if currentNodeIndex == targetNodeIndex:
+                return self.calculatePathDistance(path)
+
+            neighbors = self.adjacencyList[currentNodeIndex]
+            for edge in neighbors:
+                neighborIndex = edge.node2.id
+                if not visited[neighborIndex]:
+                    priority = self.calculateHeuristic(neighborIndex, targetNodeIndex)
+                    priorityQueue.put((priority, neighborIndex))
+
+        return 0.0
+
+    def calculateHeuristic(self, nodeIndex: int, targetNodeIndex: int) -> float:
+        node = self.nodeList[nodeIndex]
+        targetNode = self.nodeList[targetNodeIndex]
+        return node.geometricDistanceFromNode(targetNode)
+
+    def calculatePathDistance(self, path: List[int]) -> float:
+        distance = 0.0
+        for i in range(len(path) - 1):
+            currentNodeIndex = path[i]
+            nextNodeIndex = path[i + 1]
+            neighbors = self.adjacencyList[currentNodeIndex]
+            for edge in neighbors:
+                if edge.node2.id == nextNodeIndex:
+                    distance += edge.weight
+                    break
+
+        return distance
 
     def reconnectEdges(self):
         """Reconnect all edges with `reconnectProbability` value."""
@@ -118,13 +175,13 @@ class SmallWorld:
         # Keeps trying to get a random node from `nodeList`
         # That isnt present on `notSelectableIds`
         while sucess == False:
-            randomNode = self.nodeList[randint(0, self.numberOfVertices)]
+            randomNode = self.nodeList[randint(0, self.numberOfVertices - 1)]
             if randomNode.id not in notSelectableIds:
                 sucess = True
 
         return randomNode
 
-    def calculateDistanceFromAllNodes(self, origin: Node) -> list[tuple[Node, float]]:
+    def calculateDistanceFromAllNodes(self, origin: Node) -> List[Tuple[Node, float]]:
         """Calculates distance from one node to all other nodes
 
         Args:

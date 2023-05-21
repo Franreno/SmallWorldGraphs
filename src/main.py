@@ -10,6 +10,8 @@ def main() -> None:
     destinyNodes = [12, 13, 24, 35, 42, 54, 66, 73, 81, 93]
 
     algorithms = Algorithms(originNodes, destinyNodes, sm)
+
+    print(algorithms.runAllAlgorithms())
     # results = algorithms.runAllAlgorithms()
 
 
