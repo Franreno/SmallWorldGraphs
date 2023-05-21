@@ -11,19 +11,7 @@ def main() -> None:
 
     algorithms = Algorithms(originNodes, destinyNodes, sm)
 
-    path, distance = sm.depthFirstSearch(0,90)
-
-    # Print the path
-    print("Path:", path)
-
-    # Print the distance
-    print("Distance:", distance)
-
-    path, distance = sm.bestFirstSearch(0, 15)
-
-    # Print the path and distance
-    print("Path:", path)
-    print("Distance:", distance)
+    print(algorithms.runAllAlgorithms())
     # results = algorithms.runAllAlgorithms()
 
 
