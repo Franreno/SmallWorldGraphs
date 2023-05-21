@@ -1,16 +1,17 @@
 from node import Node
 from small_world import SmallWorld
 from time import time
+from typing import List, Dict
 
 
 class AlgorithmSubResult:
-    path: list[Node]
+    path: List[Node]
     distance: float
     timeUsed: float
 
     def __init__(
         self,
-        _path: list[Node],
+        _path: List[Node],
         _distance: float,
         _timeUsed: float,
     ) -> None:
@@ -23,7 +24,7 @@ class AlgorithmResult:
     meanDistance: float
     meanTime: float
 
-    def calculateValues(self, results: list[AlgorithmSubResult]):
+    def calculateValues(self, results: List[AlgorithmSubResult]):
         sumDistances = 0
         sumTimes = 0
         for result in results:
@@ -35,21 +36,21 @@ class AlgorithmResult:
 
 
 class Algorithms:
-    listOfOriginNodes: list[int]
-    listOfDestinyNodes: list[int]
+    listOfOriginNodes: List[int]
+    listOfDestinyNodes: List[int]
     smallWorld: SmallWorld
 
     def __init__(
         self,
-        _listOfOriginNodes: list[int],
-        _listOfDestinyNodes: list[int],
+        _listOfOriginNodes: List[int],
+        _listOfDestinyNodes: List[int],
         _smallWorld: SmallWorld,
     ) -> None:
         self.destiny = _listOfOriginNodes
         self.listOfDestinyNodes = _listOfDestinyNodes
         self.smallWorld = _smallWorld
 
-    def runAllAlgorithms(self) -> dict[str, AlgorithmResult]:
+    def runAllAlgorithms(self) -> Dict[str, AlgorithmResult]:
         algorithmsSubResults = []
         for origin, destiny in zip(self.listOfOriginNodes, self.listOfDestinyNodes):
             algorithmsSubResults.append(self.dfs(origin, destiny))

@@ -10,6 +10,20 @@ def main() -> None:
     destinyNodes = [12, 13, 24, 35, 42, 54, 66, 73, 81, 93]
 
     algorithms = Algorithms(originNodes, destinyNodes, sm)
+
+    path, distance = sm.depthFirstSearch(0,90)
+
+    # Print the path
+    print("Path:", path)
+
+    # Print the distance
+    print("Distance:", distance)
+
+    path, distance = sm.bestFirstSearch(0, 15)
+
+    # Print the path and distance
+    print("Path:", path)
+    print("Distance:", distance)
     # results = algorithms.runAllAlgorithms()
 
 
