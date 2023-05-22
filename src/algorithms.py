@@ -142,7 +142,7 @@ class Algorithms:
 
         return AlgorithmSubResult([], 0, endTime)
 
-    def bestFirstSearch(self,startNodeIndex: int, targetNodeIndex: int) -> Tuple[List[int], float, float]:
+    def bestFirstSearch(self, startNodeIndex: int, targetNodeIndex: int) -> Tuple[List[int], float, float]:
         startTime = time()
 
         visited = [False] * self.smallWorld.numberOfVertices
@@ -193,9 +193,10 @@ class Algorithms:
     def calculateManhattan(self, smallWorld: SmallWorld, nodeIndex: int, targetNodeIndex: int) -> float:
         node = smallWorld.nodeList[nodeIndex]
         targetNode = smallWorld.nodeList[targetNodeIndex]
-        return node.ManhattanDistanceFromNode(targetNode)
+        return node.manhattanDistanceFromNode(targetNode)
 
-    def aStarEuclidian(self, origin: int, destiny: int):
+    def aStarEuclidian(self, startNodeIndex: int, targetNodeIndex: int) -> Tuple[List[int], float, float]:
+
         visited = [False] * self.smallWorld.numberOfVertices
         path = []
 
@@ -205,7 +206,7 @@ class Algorithms:
 
         return AlgorithmSubResult(path, distance, endTime)
 
-    def aStarManhattan(self, origin: int, destiny:int):
+    def aStarManhattan(self, startNodeIndex: int, targetNodeIndex: int) -> Tuple[List[int], float, float]:
 
         visited = [False] * self.smallWorld.numberOfVertices
         path = []
@@ -244,7 +245,7 @@ class Algorithms:
             for edge in neighbors:
                 neighborIndex = edge.node2.id
                 if not visited[neighborIndex]:
-                    priority = currentNode[1] + edge.weight + self.heurFunction(smallWorld, neighborIndex, targetNodeIndex)
+                    priority = currentNode[1] + edge.weight + heurFunction(smallWorld, neighborIndex, targetNodeIndex)
                     priorityQueue.put((priority, [neighborIndex, currentNode[1] + edge.weight]))
         return 0.0
 
