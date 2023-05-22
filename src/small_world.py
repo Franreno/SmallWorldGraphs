@@ -81,62 +81,6 @@ class SmallWorld:
 
         return auxAdjacencyList
 
-    def bestFirstSearch(self, startNodeIndex: int, targetNodeIndex: int) -> Tuple[List[int], float]:
-        visited = [False] * self.numberOfVertices
-        path = []
-        distance = self._bestFirstSearch(startNodeIndex, targetNodeIndex, visited, path)
-
-        return path, distance
-
-    def _bestFirstSearch(
-        self,
-        startNodeIndex: int,
-        targetNodeIndex: int,
-        visited: List[bool],
-        path: List[int],
-    ) -> float:
-        priorityQueue = PriorityQueue()
-        priorityQueue.put((0, startNodeIndex))  # (heuristic value, node index)
-
-        while not priorityQueue.empty():
-            _, currentNodeIndex = priorityQueue.get()
-
-            if visited[currentNodeIndex]:
-                continue
-
-            visited[currentNodeIndex] = True
-            path.append(currentNodeIndex)
-
-            if currentNodeIndex == targetNodeIndex:
-                return self.calculatePathDistance(path)
-
-            neighbors = self.adjacencyList[currentNodeIndex]
-            for edge in neighbors:
-                neighborIndex = edge.node2.id
-                if not visited[neighborIndex]:
-                    priority = self.calculateHeuristic(neighborIndex, targetNodeIndex)
-                    priorityQueue.put((priority, neighborIndex))
-
-        return 0.0
-
-    def calculateHeuristic(self, nodeIndex: int, targetNodeIndex: int) -> float:
-        node = self.nodeList[nodeIndex]
-        targetNode = self.nodeList[targetNodeIndex]
-        return node.geometricDistanceFromNode(targetNode)
-
-    def calculatePathDistance(self, path: List[int]) -> float:
-        distance = 0.0
-        for i in range(len(path) - 1):
-            currentNodeIndex = path[i]
-            nextNodeIndex = path[i + 1]
-            neighbors = self.adjacencyList[currentNodeIndex]
-            for edge in neighbors:
-                if edge.node2.id == nextNodeIndex:
-                    distance += edge.weight
-                    break
-
-        return distance
-
     def reconnectEdges(self):
         """Reconnect all edges with `reconnectProbability` value."""
         # iterate through all edges

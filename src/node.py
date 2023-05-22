@@ -24,5 +24,17 @@ class Node:
         """
         return sqrt((node2.xCord - self.xCord) ** 2 + (node2.yCord - self.yCord) ** 2)
 
+    def manhattanDistanceFromNode(self, node2: "Node") -> float:
+        """Returns the manhattan distance from self node and another node.
+
+        Args:
+            node2 (Node): The second node
+
+        Returns:
+            float: The euclidian distance between nodes
+        """
+        return abs(node2.xCord - self.xCord) + abs(node2.yCord - self.yCord)
+
+
     def toString(self) -> str:
         return f"id: {self.id}, x: {self.xCord}, y: {self.yCord}"

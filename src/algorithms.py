@@ -70,21 +70,27 @@ class Algorithms:
         for origin, destiny in zip(self.listOfOriginNodes, self.listOfDestinyNodes):
             algorithmsSubResults.append(self.bestFirstSearch(origin, destiny))
 
-        bestFirstAlgorithmResult = AlgorithmResult().calculateValues(
-            algorithmsSubResults
-        )
+        bestFirstAlgorithmResult = AlgorithmResult().calculateValues(algorithmsSubResults)
 
         algorithmsSubResults = []
         for origin, destiny in zip(self.listOfOriginNodes, self.listOfDestinyNodes):
-            algorithmsSubResults.append(self.aStar(origin, destiny))
+            algorithmsSubResults.append(self.aStarEuclidian(origin, destiny))
 
-        aStarAlgorithmResult = AlgorithmResult().calculateValues(algorithmsSubResults)
+        aStarEuclidianAlgorithmResult = AlgorithmResult().calculateValues(algorithmsSubResults)
+
+        algorithmsSubResults = []
+        for origin, destiny in zip(self.listOfOriginNodes, self.listOfDestinyNodes):
+            algorithmsSubResults.append(self.aStarManhattan(origin, destiny))
+
+        aStarManhattanAlgorithmResult = AlgorithmResult().calculateValues(algorithmsSubResults)
+
 
         return {
             "dfsAlgorithmResult": f"Mean Time: {dfsAlgorithmResult[1]} ; Mean Distance: {dfsAlgorithmResult[0]}",
             "bfsAlgorithmResult": bfsAlgorithmResult,
-            "bestFirstAlgorithmResult": f"Mean TIme: {bestFirstAlgorithmResult[1]} ; Mean Distance: {bestFirstAlgorithmResult[0]}",
-            "aStarAlgorithmResult": aStarAlgorithmResult,
+            "bestFirstAlgorithmResult": f"Mean Time: {bestFirstAlgorithmResult[1]} ; Mean Distance: {bestFirstAlgorithmResult[0]}",
+            "aStarEuclidianAlgorithmResult": f"Mean Time: {aStarEuclidianAlgorithmResult[1]} ; Mean Distance: {aStarEuclidianAlgorithmResult[0]}",
+            "aStarManhattanAlgorithmResult": f"Mean Time: {aStarManhattanAlgorithmResult[1]} ; Mean Distance: {aStarManhattanAlgorithmResult[0]}",
         }
 
     def depthFirstSearch(self, startNodeIndex: int, targetNodeIndex: int) -> Tuple[List[int], float, float]:
@@ -156,10 +162,10 @@ class Algorithms:
         smallWorld: SmallWorld
     ) -> float:
         priorityQueue = PriorityQueue()
-        priorityQueue.put((0, startNodeIndex))  # (heuristic value, node index)
+        priorityQueue.put((0, startNodeIndex))  # (distance value, node index)
 
         while not priorityQueue.empty():
-            _, currentNodeIndex = priorityQueue.get()
+            distance, currentNodeIndex = priorityQueue.get()
 
             if visited[currentNodeIndex]:
                 continue
@@ -168,38 +174,77 @@ class Algorithms:
             path.append(currentNodeIndex)
 
             if currentNodeIndex == targetNodeIndex:
-                return self.calculatePathDistance(smallWorld, path)
+                return distance
 
             neighbors = smallWorld.adjacencyList[currentNodeIndex]
             for edge in neighbors:
                 neighborIndex = edge.node2.id
                 if not visited[neighborIndex]:
-                    priority = self.calculateHeuristic(smallWorld ,neighborIndex, targetNodeIndex)
+                    priority = distance + edge.weight
                     priorityQueue.put((priority, neighborIndex))
-
         return 0.0
 
-    def calculateHeuristic(self, smallWorld: SmallWorld,nodeIndex: int, targetNodeIndex: int) -> float:
+    def calculateEuclidian(self, smallWorld: SmallWorld, nodeIndex: int, targetNodeIndex: int) -> float:
         node = smallWorld.nodeList[nodeIndex]
         targetNode = smallWorld.nodeList[targetNodeIndex]
         return node.geometricDistanceFromNode(targetNode)
+ 
 
-    def calculatePathDistance(self, smallWorld: SmallWorld,path: List[int]) -> float:
-        distance = 0.0
-        for i in range(len(path) - 1):
-            currentNodeIndex = path[i]
-            nextNodeIndex = path[i + 1]
-            neighbors = smallWorld.adjacencyList[currentNodeIndex]
-            for edge in neighbors:
-                if edge.node2.id == nextNodeIndex:
-                    distance += edge.weight
-                    break
+    def calculateManhattan(self, smallWorld: SmallWorld, nodeIndex: int, targetNodeIndex: int) -> float:
+        node = smallWorld.nodeList[nodeIndex]
+        targetNode = smallWorld.nodeList[targetNodeIndex]
+        return node.ManhattanDistanceFromNode(targetNode)
 
-        return distance
+    def aStarEuclidian(self, origin: int, destiny: int):
+        visited = [False] * self.smallWorld.numberOfVertices
+        path = []
 
-    def aStar(self, origin: int, destiny: int):
         startTime = time()
-        # Algorithm
+        distance = self._aStar(self.calculateEuclidian, startNodeIndex, targetNodeIndex, visited, path, self.smallWorld)
         endTime = time() - startTime
 
-        return AlgorithmSubResult([], 0, endTime)
+        return AlgorithmSubResult(path, distance, endTime)
+
+    def aStarManhattan(self, origin: int, destiny:int):
+
+        visited = [False] * self.smallWorld.numberOfVertices
+        path = []
+
+        startTime = time()
+        distance = self._aStar(self.calculateManhattan, startNodeIndex, targetNodeIndex, visited, path, self.smallWorld)
+        endTime = time() - startTime
+
+        return AlgorithmSubResult(path, distance, endTime)
+        
+    def _aStar(
+        self,
+        heurFunction,
+        startNodeIndex: int,
+        targetNodeIndex: int,
+        visited: List[bool],
+        path: List[int],
+        smallWorld: SmallWorld
+    ) -> float:
+        priorityQueue = PriorityQueue()
+        priorityQueue.put((0, [startNodeIndex, 0]))  # (heuristic value, [node index, distance from origin])
+
+        while not priorityQueue.empty():
+            _, currentNode = priorityQueue.get()
+
+            if visited[currentNode[0]]:
+                continue
+
+            visited[currentNode[0]] = True
+            path.append(currentNode[0])
+
+            if currentNode[0] == targetNodeIndex:
+                return currentNode[1]
+
+            neighbors = smallWorld.adjacencyList[currentNode[0]]
+            for edge in neighbors:
+                neighborIndex = edge.node2.id
+                if not visited[neighborIndex]:
+                    priority = currentNode[1] + edge.weight + self.heurFunction(smallWorld, neighborIndex, targetNodeIndex)
+                    priorityQueue.put((priority, [neighborIndex, currentNode[1] + edge.weight]))
+        return 0.0
+
