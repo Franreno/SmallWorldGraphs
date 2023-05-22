@@ -1,8 +1,10 @@
 from algorithms import Algorithms
 from small_world import SmallWorld
+import sys
 
 
 def main() -> None:
+    sys.setrecursionlimit(int(10e4))
     sm = SmallWorld(100, 4, 0.1)
     print(sm.toString())
 
