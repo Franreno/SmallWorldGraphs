@@ -157,7 +157,6 @@ class Algorithms:
 
         startTime = time()
         queue.append((Edge(None, self.smallWorld.nodeList[origin], 0.0), 0.0))
-        path.append(origin)
         visitedNodes[origin] = True
 
         while queue:

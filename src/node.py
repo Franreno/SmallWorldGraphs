@@ -35,6 +35,8 @@ class Node:
         """
         return abs(node2.xCord - self.xCord) + abs(node2.yCord - self.yCord)
 
+    def getXandY(self) -> tuple[int, int]:
+        return self.xCord, self.yCord
 
     def toString(self) -> str:
         return f"id: {self.id}, x: {self.xCord}, y: {self.yCord}"

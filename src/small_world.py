@@ -4,6 +4,7 @@ from edge import Edge
 from typing import List, Tuple
 from queue import PriorityQueue
 
+
 class SmallWorld:
     """Small world graph implementation"""
 
