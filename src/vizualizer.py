@@ -30,7 +30,13 @@ class Vizualizer:
         return G
 
     def visualize(
-        self, algorithmTitle: str, path: List[int], origin: int, destiny: int
+        self,
+        algorithmTitle: str,
+        path: List[int],
+        origin: int,
+        destiny: int,
+        distance: float,
+        pathToSave: str,
     ):
         G = self.nxGraph
 
@@ -62,7 +68,7 @@ class Vizualizer:
             steps=[],
         )
 
-        titleStr = f"Passos para o algoritmo {algorithmTitle}. ({origin} -> {destiny})"
+        titleStr = f"Passos para o algoritmo {algorithmTitle}. ({origin} -> {destiny}) Dist: {str(distance)[0:4]}"
         figDict["layout"]["hovermode"] = "closest"
         figDict["layout"]["showlegend"] = False
         figDict["layout"]["title"] = titleStr
@@ -148,6 +154,7 @@ class Vizualizer:
         fig = go.Figure(figDict)
 
         fig.show()
+        fig.write_html(pathToSave + f"{origin}_{destiny}.html")
 
     def createNodeTrace(
         self,
