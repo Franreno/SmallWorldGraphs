@@ -28,6 +28,7 @@ class AlgorithmResult:
     pathsUsed: List[int]
 
     def calculateValues(self, results: List[AlgorithmSubResult]):
+        self.pathsUsed = []
         sumDistances = 0
         sumTimes = 0
         for result in results:
@@ -94,11 +95,11 @@ class Algorithms:
         )
 
         return {
-            "dfsAlgorithmResult": f"Mean Time: {dfsAlgorithmResult[1]} ; Mean Distance: {dfsAlgorithmResult[0]}",
-            "bfsAlgorithmResult": f"Mean Time: {bfsAlgorithmResult[1]} ; Mean Distance: {bfsAlgorithmResult[0]}",
-            "bestFirstAlgorithmResult": f"Mean Time: {bestFirstAlgorithmResult[1]} ; Mean Distance: {bestFirstAlgorithmResult[0]}",
-            "aStarEuclidianAlgorithmResult": f"Mean Time: {aStarEuclidianAlgorithmResult[1]} ; Mean Distance: {aStarEuclidianAlgorithmResult[0]}",
-            "aStarManhattanAlgorithmResult": f"Mean Time: {aStarManhattanAlgorithmResult[1]} ; Mean Distance: {aStarManhattanAlgorithmResult[0]}",
+            "DFS": f"Mean Time: {dfsAlgorithmResult[1]} ; Mean Distance: {dfsAlgorithmResult[0]}",
+            "BFS": f"Mean Time: {bfsAlgorithmResult[1]} ; Mean Distance: {bfsAlgorithmResult[0]}",
+            "BestFirst": f"Mean Time: {bestFirstAlgorithmResult[1]} ; Mean Distance: {bestFirstAlgorithmResult[0]}",
+            "AStarEuclidian": f"Mean Time: {aStarEuclidianAlgorithmResult[1]} ; Mean Distance: {aStarEuclidianAlgorithmResult[0]}",
+            "AStarManhattan": f"Mean Time: {aStarManhattanAlgorithmResult[1]} ; Mean Distance: {aStarManhattanAlgorithmResult[0]}",
         }
 
     def depthFirstSearch(

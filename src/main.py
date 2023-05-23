@@ -1,3 +1,4 @@
+from typing import List, Tuple
 import random
 from algorithms import Algorithms
 from small_world import SmallWorld
@@ -8,82 +9,78 @@ from vizualizer import Vizualizer
 
 def main() -> None:
     sys.setrecursionlimit(int(10e4))
-    sm = SmallWorld(100, 4, 0.1)
+    print("Criando grafo 10%")
+    sm10Percent = SmallWorld(2000, 7, 0.1)
+    print("Criando grafo 5%")
+    sm5Percent = SmallWorld(2000, 7, 0.05)
+    print("Criando grafo 1%")
+    sm1Percent = SmallWorld(2000, 7, 0.01)
 
-    # Creating random starting nodes and
-
-    originNodes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    destinyNodes = [12, 13, 24, 35, 42, 54, 66, 73, 81, 93]
-
-    algorithms = Algorithms(originNodes, destinyNodes, sm)
-
-    # print(algorithms.runAllAlgorithms())
-    # results = algorithms.runAllAlgorithms()
-
-    viz = Vizualizer(sm)
-
-    sucess = False
-    result = None
-    rand1 = None
-    rand2 = None
-    while not sucess:
-        rand1 = random.randint(0, sm.numberOfVertices)
-        rand2 = random.randint(0, sm.numberOfVertices)
-        result = algorithms.aStarManhattan(rand1, rand2)
-        if result.distance != 0.0:
-            sucess = True
-
-    print(f"rodei para {rand1} e {rand2}")
-    bfsResult = algorithms.bfs(rand1, rand2)
-    dfsResult = algorithms.depthFirstSearch(rand1, rand2)
-    bestFS = algorithms.bestFirstSearch(rand1, rand2)
-    astarEuclidianResult = algorithms.aStarEuclidian(rand1, rand2)
-    astarManhattanResult = algorithms.aStarManhattan(rand1, rand2)
-
-    viz.visualize(
-        "Breadth first search",
-        bfsResult.path,
-        rand1,
-        rand2,
-        bfsResult.distance,
-        "images/SameGraph/BFS_",
+    # p = 0.1
+    originNodes10Percent, destinyNodes10Percent = createListOfNodesFromGraph(
+        10, sm10Percent
     )
-
-    viz.visualize(
-        "Depth first search",
-        dfsResult.path,
-        rand1,
-        rand2,
-        dfsResult.distance,
-        "images/SameGraph/DFS_",
+    print("\nRodando algoritmos para (n=2000, k=7, p=0.1) [10%]")
+    print(f"Nos de origem: {originNodes10Percent}")
+    print(f"Nos de destino: {destinyNodes10Percent}")
+    algorithms10Percent = Algorithms(
+        originNodes10Percent, destinyNodes10Percent, sm10Percent
     )
+    results10Percent = algorithms10Percent.runAllAlgorithms()
+    print(results10Percent)
 
-    viz.visualize(
-        "Best first search",
-        bestFS.path,
-        rand1,
-        rand2,
-        bestFS.distance,
-        "images/SameGraph/BestFS_",
+    # p = 0.05
+    originNodes5Percent, destinyNodes5Percent = createListOfNodesFromGraph(
+        10, sm5Percent
     )
+    print("\nRodando algoritmos para (n=2000, k=7, p=0.05) [5%]")
+    print(f"Nos de origem: {originNodes5Percent}")
+    print(f"Nos de destino: {destinyNodes5Percent}")
+    algorithms5Percent = Algorithms(
+        originNodes5Percent, destinyNodes5Percent, sm5Percent
+    )
+    results5Percent = algorithms5Percent.runAllAlgorithms()
+    print(results5Percent)
 
-    viz.visualize(
-        "Astar euclidian",
-        astarEuclidianResult.path,
-        rand1,
-        rand2,
-        astarEuclidianResult.distance,
-        "images/SameGraph/aStarEuclidian_",
+    # p = 0.01
+    originNodes1Percent, destinyNodes1Percent = createListOfNodesFromGraph(
+        10, sm1Percent
     )
+    print("\nRodando algoritmos para (n=2000, k=7, p=0.01) [1%]")
+    print(f"Nos de origem: {originNodes1Percent}")
+    print(f"Nos de destino: {destinyNodes1Percent}")
+    algorithms1Percent = Algorithms(
+        originNodes1Percent, destinyNodes1Percent, sm1Percent
+    )
+    results1Percent = algorithms1Percent.runAllAlgorithms()
+    print(results1Percent)
 
-    viz.visualize(
-        "Astar manhattan",
-        astarManhattanResult.path,
-        rand1,
-        rand2,
-        astarManhattanResult.distance,
-        "images/SameGraph/aStarManhattan_",
-    )
+
+def createListOfNodesFromGraph(
+    amountOfNodes: int, sm: SmallWorld
+) -> Tuple[List[int], List[int]]:
+    testAlgorithms = Algorithms([], [], sm)
+
+    originNodes = []
+    destinyNodes = []
+    for _ in range(amountOfNodes):
+        randomNode1 = random.randint(0, sm.numberOfVertices)
+        randomNode2 = random.randint(0, sm.numberOfVertices)
+        # Use the algorithm to check if there is a path between these two nodes
+        success = False
+        while not success:
+            result = testAlgorithms.bfs(randomNode1, randomNode2)
+            if result.distance != 0.0:
+                success = True
+                break
+
+            randomNode1 = random.randint(0, sm.numberOfVertices)
+            randomNode2 = random.randint(0, sm.numberOfVertices)
+
+        originNodes.append(randomNode1)
+        destinyNodes.append(randomNode2)
+
+    return originNodes, destinyNodes
 
 
 if __name__ == "__main__":
