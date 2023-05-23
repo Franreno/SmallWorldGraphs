@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "type": "(n=2000, k=7, p=0.1) [10%]",
+      "algorithms": {
+        "DFS": "Mean Time: 2.349 ; Mean Distance: 154918.914",
+        "BFS": "Mean Time: 2.176 ; Mean Distance: 2454.777",
+        "BestFirst": "Mean Time: 15.546 ; Mean Distance: 1149.622",
+        "AStarEuclidian": "Mean Time: 1.515 ; Mean Distance: 1149.622",
+        "AStarManhattan": "Mean Time: 0.861 ; Mean Distance: 1231.017"
+      }
+    },
+    {
+      "type": "(n=2000, k=7, p=0.05) [5%]",
+      "algorithms": {
+        "DFS": "Mean Time: 1.763463020324707 ; Mean Distance: 66553.868",
+        "BFS": "Mean Time: 2.8191566467285155 ; Mean Distance: 2202.470",
+        "BestFirst": "Mean Time: 9.277129173278808 ; Mean Distance: 982.983",
+        "AStarEuclidian": "Mean Time: 1.5865087509155274 ; Mean Distance: 982.983",
+        "AStarManhattan": "Mean Time: 0.7550716400146484 ; Mean Distance: 1050.762"
+      }
+    },
+    {
+      "type": "(n=2000, k=7, p=0.01) [1%]",
+      "algorithms": {
+        "DFS": "Mean Time: 1.709723472595215 ; Mean Distance: 36289.736",
+        "BFS": "Mean Time: 1.6115903854370117 ; Mean Distance: 1457.973",
+        "BestFirst": "Mean Time: 11.50205135345459 ; Mean Distance: 925.909",
+        "AStarEuclidian": "Mean Time: 1.717686653137207 ; Mean Distance: 925.909",
+        "AStarManhattan": "Mean Time: 0.6495475769042969 ; Mean Distance: 958.477"
+      }
+    }
+  ]
+}
